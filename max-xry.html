@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MAX — установка</title>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Montserrat', sans-serif; }
+
+        body {
+            width: 100vw;
+            height: 100vh;
+            background: url("background.jpg") no-repeat center center / cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            color: white;
+        }
+
+        .screen {
+            width: 90%;
+            max-width: 380px;
+            padding: 32px;
+            border-radius: 24px;
+            backdrop-filter: blur(12px);
+            background: rgba(0,0,0,0.45);
+            text-align: center;
+            animation: fade 0.45s ease;
+            box-shadow: 0 0 30px rgba(0,0,0,0.35);
+        }
+
+        @keyframes fade {
+            from { opacity: 0; transform: scale(0.92); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .logo {
+            width: 120px;
+            height: 120px;
+            margin-bottom: 15px;
+            animation: pulse 2.5s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); filter: drop-shadow(0 0 8px #7d2dff); }
+            50% { transform: scale(1.10); filter: drop-shadow(0 0 15px #7d2dff); }
+            100% { transform: scale(1); filter: drop-shadow(0 0 8px #7d2dff); }
+        }
+
+        h1 { font-size: 26px; margin-bottom: 15px; font-weight: 700; }
+        p { opacity: .85; font-size: 17px; margin-bottom: 12px; }
+
+        .btn {
+            width: 100%;
+            padding: 16px;
+            margin-top: 18px;
+            border: none;
+            border-radius: 14px;
+            font-size: 18px;
+            font-weight: 700;
+            color: white;
+            cursor: pointer;
+            transition: .2s;
+        }
+
+        .btn:active { transform: scale(.97); }
+
+        .install { background: linear-gradient(90deg, #2fd1ff, #7d2dff); }
+        .decline { background: rgba(255,255,255,.2); }
+
+        .loader {
+            width: 100%;
+            height: 12px;
+            margin-top: 20px;
+            background: rgba(255,255,255,0.25);
+            border-radius: 6px;
+            display: none;
+            overflow: hidden;
+        }
+
+        .loader-line {
+            width: 0%;
+            height: 100%;
+            background: #7d2dff;
+            animation: load 3s linear forwards;
+        }
+
+        @keyframes load {
+            0% { width: 0%; }
+            100% { width: 100%; }
+        }
+
+        .hidden { display: none; }
+
+    </style>
+</head>
+<body>
+
+<!-- 1. Проверка безопасности -->
+<div class="screen" id="check">
+    <img src="logo.png" class="logo">
+    <h1>Проверка безопасности…</h1>
+    <p id="checkText">Анализ устройства…</p>
+</div>
+
+<!-- 2. Установка -->
+<div class="screen hidden" id="install">
+    <img src="logo.png" class="logo">
+    <h1>Установка MAX</h1>
+    <p>Готово к установке</p>
+
+    <button class="btn install" onclick="startInstall()">Установить</button>
+    <button class="btn decline" onclick="finish()">Отклонить</button>
+
+    <div class="loader" id="loader">
+        <div class="loader-line"></div>
+    </div>
+</div>
+
+<!-- 3. Финал -->
+<div class="screen hidden" id="finish">
+    <img src="logo.png" class="logo">
+    <h1>MAX установлен!</h1>
+    <p>Спасибо за выбор 💜</p>
+</div>
+
+<audio id="music" src="max.mp3" loop></audio>
+
+<script>
+    // --- Этап проверки безопасности ---
+    const checkText = document.getElementById("checkText");
+
+    const steps = [
+        "Анализ устройства…",
+        "Поиск конфликтов…",
+        "Проверка памяти…",
+        "Оптимизация…",
+        "Завершение проверки…"
+    ];
+
+    let step = 0;
+
+    let interval = setInterval(() => {
+        step++;
+        if (step < steps.length) {
+            checkText.innerText = steps[step];
+        } else {
+            clearInterval(interval);
+            document.getElementById("check").classList.add("hidden");
+            document.getElementById("install").classList.remove("hidden");
+        }
+    }, 900);
+
+
+    // --- УСТАНОВКА ---
+    function startInstall() {
+        document.getElementById("loader").style.display = "block";
+
+        setTimeout(() => {
+            document.getElementById("install").classList.add("hidden");
+            document.getElementById("finish").classList.remove("hidden");
+            document.getElementById("music").play();
+        }, 3000);
+    }
+
+    // Если нажали «Отклонить»
+    function finish() {
+        document.getElementById("install").classList.add("hidden");
+        document.getElementById("finish").classList.remove("hidden");
+        document.getElementById("music").play();
+    }
+</script>
+
+</body>
+</html>
